@@ -1,1 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Euhomy 冰型冰谱用户研究报告</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f8fafc; }
+        
+        .radar-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; border: 2px solid transparent; }
+        .radar-card:hover { transform: translateY(-4px); }
+        .radar-card.active { border-color: #2563eb; background-color: #eff6ff; box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.1); }
+        
+        .tab-content { display: none; animation: fadeIn 0.4s ease-out forwards; }
+        .tab-content.active { display: block; }
 
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .bar-anim { transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-6xl mx-auto">
+        <!-- 头部标题 -->
+        <header class="mb-10 border-b border-slate-200 pb-6">
+            <h1 class="text-3xl font-bold text-slate-800">冰型冰谱用户评价交互 Dashboard</h1>
+            <p class="text-slate-500 mt-2">点击下方冰型卡片，查看各维度详细对比数据</p>
+        </header>
+
+        <!-- 第一部分：冰型选择卡片 -->
+        <section class="mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                
+                <!-- 子弹冰卡片 -->
+                <div onclick="switchTab('bullet')" id="card-bullet" class="radar-card active bg-white p-5 rounded-xl shadow-sm">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-bold text-slate-800">子弹冰</h3>
+                        <span class="px-2 py-0.5 bg-green-100 text-green-700 text-[10px] font-bold rounded uppercase">心智锚点</span>
+                    </div>
+                    <p class="text-xs text-slate-500 leading-tight">解释易懂性评分最高 (4.44)，用户认知最清晰。</p>
+                </div>
+
+                <!-- 小方块卡片 -->
+                <div onclick="switchTab('cube')" id="card-cube" class="radar-card bg-white p-5 rounded-xl shadow-sm">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-bold text-slate-800 text-sm">小方块</h3>
+                        <span class="px-2 py-0.5 bg-slate-100 text-slate-600 text-[10px] font-bold rounded uppercase">表现均衡</span>
+                    </div>
+                    <p class="text-xs text-slate-500 leading-tight">各项指标分布均匀，属于稳健的工具型内容。</p>
+                </div>
+
+                <!-- 月牙冰卡片 -->
+                <div onclick="switchTab('crescent')" id="card-crescent" class="radar-card bg-white p-5 rounded-xl shadow-sm">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-bold text-slate-800 text-sm">月牙冰</h3>
+                        <span class="px-2 py-0.5 bg-red-100 text-red-700 text-[10px] font-bold rounded uppercase">认知瓶颈</span>
+                    </div>
+                    <p class="text-xs text-slate-500 leading-tight">尝试意愿仅 3.33，亟需加强功能性科普。</p>
+                </div>
+
+                <!-- 咀嚼冰卡片 -->
+                <div onclick="switchTab('nugget')" id="card-nugget" class="radar-card bg-white p-5 rounded-xl shadow-sm">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-bold text-slate-800 text-sm">咀嚼冰</h3>
+                        <span class="px-2 py-0.5 bg-amber-100 text-amber-700 text-[10px] font-bold rounded uppercase">高忠诚度</span>
+                    </div>
+                    <p class="text-xs text-slate-500 leading-tight">尝试意愿 4.16，用户对深度内容渴求度高。</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 第二部分：动态维度数据展示 -->
+        <section class="bg-white p-6 md:p-8 rounded-2xl border border-slate-200 shadow-sm mb-10">
+            <div id="content-bullet" class="tab-content active">
+                <div class="mb-6">
+                    <h2 class="text-xl font-bold text-slate-800">子弹冰：多维度数据对比</h2>
+                    <p class="text-sm text-slate-500 italic mt-1">Euhomy 在解释易懂性上大幅领先其他品牌</p>
+                </div>
+                <div class="space-y-6">
+                    <!-- 维度 1 -->
+                    <div>
+                        <div class="flex justify-between text-xs font-bold text-slate-600 mb-2"><span>解释易懂性 (Understandability)</span><span>Euhomy: 4.44 / 其他: 4.32</span></div>
+                        <div class="h-3 bg-slate-100 rounded-full overflow-hidden relative">
+                            <div class="absolute h-full bg-blue-600 bar-anim" style="width: 88.8%;"></div> <!-- 4.44/5 -->
+                            <div class="absolute h-full border-r-2 border-white opacity-50" style="width: 86.4%;"></div> <!-- 4.32 -->
+                        </div>
+                    </div>
+                    <!-- 维度 2 -->
+                    <div>
+                        <div class="flex justify-between text-xs font-bold text-slate-600 mb-2"><span>尝试烹饪原 (Intent)</span><span>Euhomy: 4.05 / 全部: 4.33</span></div>
+                        <div class="h-3 bg-slate-100 rounded-full overflow-hidden relative">
+                            <div class="absolute h-full bg-blue-400 bar-anim" style="width: 81%;"></div> <!-- 4.05 -->
+                        </div>
+                    </div>
+                    <!-- 维度 3 -->
+                    <div>
+                        <div class="flex justify-between text-xs font-bold text-slate-600 mb-2"><span>内容帮助性 (Helpfulness)</span><span>Euhomy: 4.02 / 其他: 4.11</span></div>
+                        <div class="h-3 bg-slate-100 rounded-full overflow-hidden relative">
+                            <div class="absolute h-full bg-blue-500 bar-anim" style="width: 80.4%;"></div> <!-- 4.02 -->
+                        </div>
+                    </div>
+                    <!-- 维度 4 -->
+                    <div>
+                        <div class="flex justify-between text-xs font-bold text-slate-600 mb-2"><span>创意性 (Creativity)</span><span>Euhomy: 4.11 / 其他: 3.92</span></div>
+                        <div class="h-3 bg-slate-100 rounded-full overflow-hidden relative">
+                            <div class="absolute h-full bg-indigo-600 bar-anim" style="width: 82.2%;"></div> <!-- 4.11 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="content-cube" class="tab-content">
+                <div class="mb-6">
+                    <h2 class="text-xl font-bold text-slate-800">小方块：多维度数据对比</h2>
+                    <p class="text-sm text-slate-500 mt-1 italic">指标分布最为均衡，用户认知度稳定</p>
+                </div>
+                <div class="space-y-6">
+                    <div>
+                        <div class="flex justify-between text-xs font-bold text-slate-600 mb-2"><span>解释易懂性</span><span>Euhomy: 4.29 / 全部: 3.93</span></div>
+                        <div class="h-3 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-blue-600 bar-anim" style="width: 85.8%;"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs font-bold text-slate-600 mb-2"><span>尝试烹饪原</span><span>Euhomy: 4.01 / 全部: 3.80</span></div>
+                        <div class="h-3 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-blue-400 bar-anim" style="width: 80.2%;"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs font-bold text-slate-600 mb-2"><span>内容帮助性</span><span>Euhomy: 4.09 / 全部: 3.87</span></div>
+                        <div class="h-3 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-blue-500 bar-anim" style="width: 81.8%;"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs font-bold text-slate-600 mb-2"><span>创意性</span><span>Euhomy: 3.98 / 全部: 3.73</span></div>
+                        <div class="h-3 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-indigo-600 bar-anim" style="width: 79.6%;"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="content-crescent" class="tab-content">
+                <div class="mb-6">
+                    <h2 class="text-xl font-bold text-slate-800 text-red-700">月牙冰：亟待突破的认知瓶颈</h2>
+                    <p class="text-sm text-slate-500 mt-1 italic">尝试意愿处于低谷，需强化场景教育</p>
+                </div>
+                <div class="space-y-6">
+                    <div>
+                        <div class="flex justify-between text-xs font-bold text-slate-600 mb-2"><span>解释易懂性</span><span>Euhomy: 4.11 / 其他: 4.00</span></div>
+                        <div class="h-3 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-slate-400 bar-anim" style="width: 82.2%;"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs font-bold text-slate-600 mb-2"><span>尝试烹饪原</span><span class="text-red-600 font-bold">Euhomy: 3.33 / 全部: 4.08</span></div>
+                        <div class="h-3 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-red-400 bar-anim" style="width: 66.6%;"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs font-bold text-slate-600 mb-2"><span>内容帮助性</span><span>Euhomy: 3.67 / 其他: 4.11</span></div>
+                        <div class="h-3 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-slate-500 bar-anim" style="width: 73.4%;"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs font-bold text-slate-600 mb-2"><span>创意性</span><span>Euhomy: 4.00 / 其他: 4.11</span></div>
+                        <div class="h-3 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-indigo-400 bar-anim" style="width: 80%;"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="content-nugget" class="tab-content">
+                <div class="mb-6">
+                    <h2 class="text-xl font-bold text-slate-800 text-amber-700">咀嚼冰：核心忠诚用户的领地</h2>
+                    <p class="text-sm text-slate-500 mt-1 italic">创意性评分极高 (4.17)，用户活跃度最强</p>
+                </div>
+                <div class="space-y-6">
+                    <div>
+                        <div class="flex justify-between text-xs font-bold text-slate-600 mb-2"><span>解释易懂性</span><span>Euhomy: 4.09 / 其他: 4.34</span></div>
+                        <div class="h-3 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-amber-600 bar-anim" style="width: 81.8%;"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs font-bold text-slate-600 mb-2"><span>尝试烹饪原</span><span>Euhomy: 3.82 / 全部: 4.16</span></div>
+                        <div class="h-3 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-amber-400 bar-anim" style="width: 76.4%;"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs font-bold text-slate-600 mb-2"><span>内容帮助性</span><span>Euhomy: 3.91 / 全部: 4.18</span></div>
+                        <div class="h-3 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-amber-500 bar-anim" style="width: 78.2%;"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs font-bold text-slate-600 mb-2"><span>创意性</span><span>Euhomy: 4.17 / 全部: 4.09</span></div>
+                        <div class="h-3 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-orange-600 bar-anim" style="width: 83.4%;"></div></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第三部分：共通需求洞察 (基于表2) -->
+        <section class="bg-slate-50 p-8 rounded-2xl border border-slate-200">
+            <h2 class="text-xl font-bold text-slate-800 mb-6">重点洞察：Euhomy 用户的核心期待</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-5 rounded-xl shadow-sm border-t-4 border-blue-600">
+                    <span class="text-xs font-bold text-blue-600 uppercase">Top 1 需求</span>
+                    <h4 class="font-bold mt-1">极简配方 (67%)</h4>
+                    <p class="text-xs text-slate-500 mt-2">用户对“易寻找原料”的依赖度极高，内容应避开冷门基酒。</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border-t-4 border-indigo-600">
+                    <span class="text-xs font-bold text-indigo-600 uppercase">差异化机会</span>
+                    <h4 class="font-bold mt-1">社交出片 (44%)</h4>
+                    <p class="text-xs text-slate-500 mt-2">Euhomy 用户对“拍照好看”的渴求远超行业均值 (18%)，需提升视觉档次。</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border-t-4 border-slate-600">
+                    <span class="text-xs font-bold text-slate-600 uppercase">增长引擎</span>
+                    <h4 class="font-bold mt-1">节日主题 (67%)</h4>
+                    <p class="text-xs text-slate-500 mt-2">结合圣诞、夏季等节点推出限定冰谱是提升活跃度的捷径。</p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        function switchTab(iceType) {
+            // 更新卡片激活状态
+            document.querySelectorAll('.radar-card').forEach(card => card.classList.remove('active'));
+            document.getElementById('card-' + iceType).classList.add('active');
+
+            // 更新内容显示
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById('content-' + iceType).classList.add('active');
+        }
+    </script>
+</body>
+</html>
