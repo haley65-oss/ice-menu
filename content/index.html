@@ -3,198 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>各冰型冰谱内容需求看板</title>
+    <title>各冰型内容需求看板</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        .ice-tab {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-width: 2px;
+        }
         .ice-tab.active {
             border-color: #3b82f6;
             background-color: #eff6ff;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px -2px rgb(59 130 246 / 0.25);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.2);
         }
         .content-pane {
             display: none;
-            animation: fadeIn 0.3s ease-out;
+            animation: slideIn 0.4s ease-out;
         }
         .content-pane.active {
             display: block;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        /* Euhomy 颜色：蓝色 */
-        .highlight-euhomy { color: #2563eb; font-weight: 800; font-size: 1.05rem; }
-        /* 其他品牌 颜色：琥珀色 */
-        .highlight-other-high { color: #d97706; font-weight: 800; font-size: 1.05rem; }
-        .data-normal { color: #64748b; font-weight: 500; }
+        /* 数据高亮逻辑：Euhomy 领先用蓝色，Others 领先用琥珀色 */
+        .val-euhomy { color: #2563eb; font-weight: 800; font-size: 1.1rem; }
+        .val-other { color: #d97706; font-weight: 800; font-size: 1.1rem; }
+        .val-normal { color: #64748b; font-weight: 500; }
+        .row-zero { color: #cbd5e1; }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen font-sans antialiased text-slate-900">
-    <div class="max-w-6xl mx-auto px-4 py-10">
-        <header class="mb-12 text-center">
-            <h1 class="text-3xl font-black text-slate-800 tracking-tight mb-3">各冰型冰谱内容需求深度分析</h1>
-            <p class="text-slate-500 max-w-2xl mx-auto text-sm">对比 Euhomy 与其他品牌用户在 9 个维度的内容偏好差异</p>
+<body class="bg-gray-50 min-h-screen py-12 px-4">
+    <div class="max-w-5xl mx-auto">
+        <!-- 标题 -->
+        <header class="mb-10 text-center">
+            <h1 class="text-3xl font-black text-slate-800 tracking-tight">各冰型冰谱内容需求深度分析</h1>
+            <p class="text-slate-500 mt-2">数据已根据截图核对（完整 9 项内容需求）</p>
         </header>
 
-        <!-- 顶部导航切换 -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <button onclick="switchTab('bullet')" id="tab-bullet" class="ice-tab active flex flex-col items-center p-6 bg-white border-2 border-transparent rounded-2xl transition-all duration-200 group">
+        <!-- 导航切换 -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+            <button onclick="switchTab('bullet')" id="tab-bullet" class="ice-tab active flex flex-col items-center p-6 bg-white rounded-2xl border-transparent group">
                 <span class="text-4xl mb-2 group-hover:scale-110 transition-transform">⚪</span>
                 <span class="font-bold text-slate-700">子弹冰</span>
                 <span class="text-[10px] text-blue-500 font-bold uppercase tracking-widest mt-1">Bullet Ice</span>
             </button>
-            <button onclick="switchTab('square')" id="tab-square" class="ice-tab flex flex-col items-center p-6 bg-white border-2 border-transparent rounded-2xl transition-all duration-200 group">
+            <button onclick="switchTab('square')" id="tab-square" class="ice-tab flex flex-col items-center p-6 bg-white rounded-2xl border-transparent group">
                 <span class="text-4xl mb-2 group-hover:scale-110 transition-transform">🧊</span>
                 <span class="font-bold text-slate-700">小方冰</span>
                 <span class="text-[10px] text-indigo-500 font-bold uppercase tracking-widest mt-1">Square Ice</span>
             </button>
-            <button onclick="switchTab('crescent')" id="tab-crescent" class="ice-tab flex flex-col items-center p-6 bg-white border-2 border-transparent rounded-2xl transition-all duration-200 group">
+            <button onclick="switchTab('crescent')" id="tab-crescent" class="ice-tab flex flex-col items-center p-6 bg-white rounded-2xl border-transparent group">
                 <span class="text-4xl mb-2 group-hover:scale-110 transition-transform">🌙</span>
                 <span class="font-bold text-slate-700">月牙冰</span>
                 <span class="text-[10px] text-teal-500 font-bold uppercase tracking-widest mt-1">Crescent Ice</span>
             </button>
-            <button onclick="switchTab('nugget')" id="tab-nugget" class="ice-tab flex flex-col items-center p-6 bg-white border-2 border-transparent rounded-2xl transition-all duration-200 group">
+            <button onclick="switchTab('nugget')" id="tab-nugget" class="ice-tab flex flex-col items-center p-6 bg-white rounded-2xl border-transparent group">
                 <span class="text-4xl mb-2 group-hover:scale-110 transition-transform">✨</span>
                 <span class="font-bold text-slate-700">咀嚼冰</span>
                 <span class="text-[10px] text-orange-500 font-bold uppercase tracking-widest mt-1">Nugget Ice</span>
             </button>
         </div>
 
-        <!-- 详情内容区 -->
-        <div id="content-container">
-
-            <!-- 子弹冰 -->
+        <!-- 数据面板 -->
+        <div id="panels">
+            <!-- 子弹冰数据 (核对完成) -->
             <div id="content-bullet" class="content-pane active">
-                <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
-                    <div class="p-5 bg-blue-600 flex justify-between items-center text-white">
-                        <span class="font-bold tracking-wide uppercase text-sm">Bullet Ice Analysis Data</span>
-                        <div class="flex gap-6 text-xs font-bold">
-                            <div class="flex items-center"><div class="w-3 h-3 bg-blue-400 rounded-sm mr-2"></div>Euhomy</div>
-                            <div class="flex items-center"><div class="w-3 h-3 bg-amber-400 rounded-sm mr-2"></div>其他</div>
-                        </div>
+                <div class="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
+                    <div class="px-6 py-4 bg-blue-600 text-white flex justify-between items-center">
+                        <span class="font-bold text-sm tracking-widest uppercase">Bullet Ice Content Needs</span>
+                        <div class="flex gap-4 text-xs font-bold"><span>🔵 Euhomy</span><span>🟠 Others</span></div>
                     </div>
-                    <table class="w-full text-sm">
-                        <thead class="text-[11px] text-slate-400 uppercase bg-slate-50/50 border-b border-slate-100">
-                            <tr><th class="px-8 py-4 text-left">内容需求方向 (冰谱内容)</th><th class="px-8 py-4 text-center">Euhomy</th><th class="px-8 py-4 text-center">其他</th></tr>
+                    <table class="w-full">
+                        <thead class="bg-gray-50 text-gray-400 text-[11px] uppercase border-b border-gray-100">
+                            <tr><th class="px-6 py-4 text-left">冰谱内容需求</th><th class="text-center w-32">Euhomy</th><th class="text-center w-32">Others</th></tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-50">
-                            <tr><td class="px-8 py-4 font-semibold text-slate-700">使用简单/易找食材的配方</td><td class="text-center highlight-euhomy">67%</td><td class="text-center data-normal">48%</td></tr>
-                            <tr><td class="px-8 py-4 font-semibold text-slate-700">季节或节日主题饮品</td><td class="text-center highlight-euhomy">67%</td><td class="text-center data-normal">49%</td></tr>
-                            <tr><td class="px-8 py-4 font-semibold text-slate-700">简单的步骤说明</td><td class="text-center data-normal">56%</td><td class="text-center highlight-other-high">60%</td></tr>
-                            <tr><td class="px-8 py-4 font-semibold text-slate-700">推荐冰型或饮品搭配</td><td class="text-center highlight-euhomy">44%</td><td class="text-center data-normal">38%</td></tr>
-                            <tr><td class="px-8 py-4 font-semibold text-slate-700">适合聚会/招待客人的饮品</td><td class="text-center highlight-euhomy">44%</td><td class="text-center data-normal">36%</td></tr>
-                            <tr><td class="px-8 py-4 font-semibold text-slate-700">日常清爽快捷饮品</td><td class="text-center data-normal">44%</td><td class="text-center highlight-other-high">53%</td></tr>
-                            <tr><td class="px-8 py-4 font-semibold text-slate-700">高颜值/适合社交分享</td><td class="text-center highlight-euhomy">44%</td><td class="text-center data-normal">16%</td></tr>
-                            <tr><td class="px-8 py-4 font-semibold text-slate-700">创意或趋势饮品点子</td><td class="text-center data-normal">33%</td><td class="text-center highlight-other-high">46%</td></tr>
-                            <tr><td class="px-8 py-4 font-semibold text-slate-700">作为爱好学习制作</td><td class="text-center text-slate-300">11%</td><td class="text-center data-normal">17%</td></tr>
+                        <tbody class="divide-y divide-gray-50">
+                            <tr><td class="px-6 py-4 font-medium text-slate-700">使用简单/易找食材的配方</td><td class="text-center val-euhomy">67%</td><td class="text-center val-normal">48%</td></tr>
+                            <tr><td class="px-6 py-4 font-medium text-slate-700">季节或节日主题饮品</td><td class="text-center val-euhomy">67%</td><td class="text-center val-normal">49%</td></tr>
+                            <tr><td class="px-6 py-4 font-medium text-slate-700">简单的步骤说明</td><td class="text-center val-normal">56%</td><td class="text-center val-other">60%</td></tr>
+                            <tr><td class="px-6 py-4 font-medium text-slate-700">推荐冰型或饮品搭配</td><td class="text-center val-euhomy">44%</td><td class="text-center val-normal">38%</td></tr>
+                            <tr><td class="px-6 py-4 font-medium text-slate-700">适合聚会/招待客人的饮品</td><td class="text-center val-euhomy">44%</td><td class="text-center val-normal">36%</td></tr>
+                            <tr><td class="px-6 py-4 font-medium text-slate-700">日常清爽快捷饮品</td><td class="text-center val-normal">44%</td><td class="text-center val-other">53%</td></tr>
+                            <tr><td class="px-6 py-4 font-medium text-slate-700">高颜值/适合社交分享</td><td class="text-center val-euhomy">44%</td><td class="text-center val-normal">16%</td></tr>
+                            <tr><td class="px-6 py-4 font-medium text-slate-700">创意或趋势饮品点子</td><td class="text-center val-normal">33%</td><td class="text-center val-other">46%</td></tr>
+                            <tr><td class="px-6 py-4 font-medium text-slate-700">作为爱好学习制作</td><td class="text-center val-normal">11%</td><td class="text-center val-other">17%</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- 小方冰 -->
+            <!-- 小方冰数据 (核对完成) -->
             <div id="content-square" class="content-pane">
-                <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
-                    <div class="p-5 bg-indigo-600 flex justify-between items-center text-white">
-                        <span class="font-bold tracking-wide uppercase text-sm">Square Ice Analysis Data</span>
-                        <div class="flex gap-6 text-xs font-bold">
-                            <div class="flex items-center"><div class="w-3 h-3 bg-blue-300 rounded-sm mr-2"></div>Euhomy</div>
-                            <div class="flex items-center"><div class="w-3 h-3 bg-amber-400 rounded-sm mr-2"></div>其他</div>
-                        </div>
+                <div class="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
+                    <div class="px-6 py-4 bg-indigo-600 text-white flex justify-between items-center">
+                        <span class="font-bold text-sm tracking-widest uppercase">Square Ice Content Needs</span>
+                        <div class="flex gap-4 text-xs font-bold"><span>🔵 Euhomy</span><span>🟠 Others</span></div>
                     </div>
-                    <table class="w-full text-sm">
-                        <thead class="text-[11px] text-slate-400 bg-slate-50/50 border-b border-slate-100">
-                            <tr><th class="px-8 py-4 text-left">内容需求方向 (冰谱内容)</th><th class="px-8 py-4 text-center">Euhomy</th><th class="px-8 py-4 text-center">其他</th></tr>
+                    <table class="w-full">
+                        <thead class="bg-gray-50 text-gray-400 text-[11px] uppercase border-b border-gray-100">
+                            <tr><th class="px-6 py-4 text-left">冰谱内容需求</th><th class="text-center w-32">Euhomy</th><th class="text-center w-32">Others</th></tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-50">
-                            <tr><td class="px-8 py-4 font-semibold text-slate-700">使用简单/易找食材的配方</td><td class="text-center highlight-euhomy">67%</td><td class="text-center data-normal">43%</td></tr>
-                            <tr><td class="px-8 py-4 font-semibold text-slate-700">季节或节日主题饮品</td><td class="text-center data-normal">47%</td><td class="text-center highlight-other-high">48%</td></tr>
-                            <tr><td class="px-8 py-4 font-semibold text-slate-700">推荐冰型或饮品搭配</td><td class="text-center highlight-euhomy">47%</td><td class="text-center data-normal">42%</td></tr>
-                            <tr><td class="px-8 py-4 font-semibold text-slate-700">日常清爽快捷饮品</td><td class="text-center data-normal">40%</td><td class="text-center highlight-other-high">50%</td></tr>
-                            <tr><td class="px-8 py-4 font-semibold text-slate-700">简单的步骤说明</td><td class="text-center data-normal">33%</td><td class="text-center highlight-other-high">57%</td></tr>
-                            <tr><td class="px-8 py-4 font-semibold text-slate-700">适合聚会/招待客人的饮品</td><td class="text-center data-normal">33%</td><td class="text-center highlight-other-high">35%</td></tr>
-                            <tr><td class="px-8 py-4 font-semibold text-slate-700">创意或趋势饮品点子</td><td class="text-center data-normal">27%</td><td class="text-center highlight-other-high">51%</td></tr>
-                            <tr><td class="px-8 py-4 font-semibold text-slate-700">高颜值/适合社交分享</td><td class="text-center data-normal">20%</td><td class="text-center highlight-other-high">21%</td></tr>
-                            <tr><td class="px-8 py-4 font-semibold text-slate-700">作为爱好学习制作</td><td class="text-center text-slate-200">0%</td><td class="text-center highlight-other-high">21%</td></tr>
+                        <tbody class="divide-y divide-gray-50">
+                            <tr><td class="px-6 py-4 font-medium text-slate-700">使用简单/易找食材的配方</td><td class="text-center val-euhomy">67%</td><td class="text-center val-normal">43%</td></tr>
+                            <tr><td class="px-6 py-4 font-medium text-slate-700">季节或节日主题饮品</td><td class="text-center val-normal">47%</td><td class="text-center val-other">48%</td></tr>
+                            <tr><td class="px-6 py-4 font-medium text-slate-700">推荐冰型或饮品搭配</td><td class="text-center val-euhomy">47%</td><td class="text-center val-normal">42%</td></tr>
+                            <tr><td class="px-6 py-4 font-medium text-slate-700">日常清爽快捷饮品</td><td class="text-center val-normal">40%</td><td class="text-center val-other">50%</td></tr>
+                            <tr><td class="px-6 py-4 font-medium text-slate-700">简单的步骤说明</td><td class="text-center val-normal">33%</td><td class="text-center val-other">57%</td></tr>
+                            <tr><td class="px-6 py-4 font-medium text-slate-700">适合聚会/招待客人的饮品</td><td class="text-center val-normal">33%</td><td class="text-center val-other">35%</td></tr>
+                            <tr><td class="px-6 py-4 font-medium text-slate-700">创意或趋势饮品点子</td><td class="text-center val-normal">27%</td><td class="text-center val-other">51%</td></tr>
+                            <tr><td class="px-6 py-4 font-medium text-slate-700">高颜值/适合社交分享</td><td class="text-center val-normal">20%</td><td class="text-center val-other">21%</td></tr>
+                            <tr><td class="px-6 py-4 font-medium text-slate-700">作为爱好学习制作</td><td class="text-center row-zero">0%</td><td class="text-center val-other">21%</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- 月牙冰 -->
+            <!-- 月牙冰数据 (核对完成) -->
             <div id="content-crescent" class="content-pane">
-                <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
-                    <div class="p-5 bg-teal-600 flex justify-between items-center text-white">
-                        <span class="font-bold tracking-wide uppercase text-sm">Crescent Ice Analysis Data</span>
-                        <div class="flex gap-6 text-xs font-bold">
-                            <div class="flex items-center"><div class="w-3 h-3 bg-blue-300 rounded-sm mr-2"></div>Euhomy</div>
-                            <div class="flex items-center"><div class="w-3 h-3 bg-amber-400 rounded-sm mr-2"></div>其他</div>
-                        </div>
+                <div class="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
+                    <div class="px-6 py-4 bg-teal-600 text-white flex justify-between items-center">
+                        <span class="font-bold text-sm tracking-widest uppercase">Crescent Ice Content Needs</span>
+                        <div class="flex gap-4 text-xs font-bold"><span>🔵 Euhomy</span><span>🟠 Others</span></div>
                     </div>
-                    <table class="w-full text-sm">
-                        <thead class="text-[11px] text-slate-400 bg-slate-50/50 border-b border-slate-100">
-                            <tr><th class="px-8 py-4 text-left">内容需求方向 (冰谱内容)</th><th class="px-8 py-4 text-center">Euhomy</th><th class="px-8 py-4 text-center">其他</th></tr>
+                    <table class="w-full">
+                        <thead class="bg-gray-50 text-gray-400 text-[11px] uppercase border-b border-gray-100">
+                            <tr><th class="px-6 py-4 text-left">冰谱内容需求</th><th class="text-center w-32">Euhomy</th><th class="text-center w-32">Others</th></tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-50">
-                            <tr><td class="px-8 py-4 font-semibold text-slate-700">使用简单/易找食材的配方</td><td class="text-center highlight-euhomy">67%</td><td class="text-center data-normal">47%</td></tr>
-                            <tr><td class="px-8 py-4 font-semibold text-slate-700">推荐冰型或饮品搭配</td><td class="text-center highlight-euhomy">67%</td><td class="text-center data-normal">38%</td></tr>
-                            <tr><td class="px-8 py-4 font-semibold text-slate-700">高颜值/适合社交分享</td><td class="text-center highlight-euhomy">33%</td><td class="text-center data-normal">29%</td></tr>
-                            <tr><td class="px-8 py-4 font-semibold text-slate-700">适合聚会/招待客人的饮品</td><td class="text-center data-normal">33%</td><td class="text-center highlight-other-high">41%</td></tr>
-                            <tr><td class="px-8 py-4 font-semibold text-slate-700">季节或节日主题饮品</td><td class="text-center data-normal">33%</td><td class="text-center highlight-other-high">38%</td></tr>
-                            <tr><td class="px-8 py-4 font-semibold text-slate-700">创意或趋势饮品点子</td><td class="text-center data-normal">33%</td><td class="text-center highlight-other-high">44%</td></tr>
-                            <tr><td class="px-8 py-4 font-semibold text-slate-700">简单的步骤说明</td><td class="text-center data-normal">33%</td><td class="text-center highlight-other-high">50%</td></tr>
-                            <tr><td class="px-8 py-4 font-semibold text-slate-700 text-slate-400">日常清爽快捷饮品</td><td class="text-center text-slate-200">0%</td><td class="text-center highlight-other-high">59%</td></tr>
-                            <tr><td class="px-8 py-4 font-semibold text-slate-700 text-slate-400">作为爱好学习制作</td><td class="text-center text-slate-200">0%</td><td class="text-center highlight-other-high">32%</td></tr>
+                        <tbody class="divide-y divide-gray-50">
+                            <tr><td class="px-6 py-4 font-medium text-slate-700">使用简单/易找食材的配方</td><td class="text-center val-euhomy">67%</td><td class="text-center val-normal">47%</td></tr>
+                            <tr><td class="px-6 py-4 font-medium text-slate-700">推荐冰型或饮品搭配</td><td class="text-center val-euhomy">67%</td><td class="text-center val-normal">38%</td></tr>
+                            <tr><td class="px-6 py-4 font-medium text-slate-700">高颜值/适合社交分享</td><td class="text-center val-euhomy">33%</td><td class="text-center val-normal">29%</td></tr>
+                            <tr><td class="px-6 py-4 font-medium text-slate-700">适合聚会/招待客人的饮品</td><td class="text-center val-normal">33%</td><td class="text-center val-other">41%</td></tr>
+                            <tr><td class="px-6 py-4 font-medium text-slate-700">季节或节日主题饮品</td><td class="text-center val-normal">33%</td><td class="text-center val-other">38%</td></tr>
+                            <tr><td class="px-6 py-4 font-medium text-slate-700">简单的步骤说明</td><td class="text-center val-normal">33%</td><td class="text-center val-other">50%</td></tr>
+                            <tr><td class="px-6 py-4 font-medium text-slate-700">创意或趋势饮品点子</td><td class="text-center val-normal">33%</td><td class="text-center val-other">44%</td></tr>
+                            <tr><td class="px-6 py-4 font-medium text-slate-700">作为爱好学习制作</td><td class="text-center row-zero">0%</td><td class="text-center val-other">32%</td></tr>
+                            <tr><td class="px-6 py-4 font-medium text-slate-700">日常清爽快捷饮品</td><td class="text-center row-zero">0%</td><td class="text-center val-other">59%</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- 咀嚼冰 -->
+            <!-- 咀嚼冰数据 (核对完成) -->
             <div id="content-nugget" class="content-pane">
-                <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
-                    <div class="p-5 bg-orange-600 flex justify-between items-center text-white">
-                        <span class="font-bold tracking-wide uppercase text-sm">Nugget Ice Analysis Data</span>
-                        <div class="flex gap-6 text-xs font-bold">
-                            <div class="flex items-center"><div class="w-3 h-3 bg-blue-300 rounded-sm mr-2"></div>Euhomy</div>
-                            <div class="flex items-center"><div class="w-3 h-3 bg-amber-400 rounded-sm mr-2"></div>其他</div>
-                        </div>
+                <div class="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
+                    <div class="px-6 py-4 bg-orange-600 text-white flex justify-between items-center">
+                        <span class="font-bold text-sm tracking-widest uppercase">Nugget Ice Content Needs</span>
+                        <div class="flex gap-4 text-xs font-bold"><span>🔵 Euhomy</span><span>🟠 Others</span></div>
                     </div>
-                    <table class="w-full text-sm">
-                        <thead class="text-[11px] text-slate-400 bg-slate-50/50 border-b border-slate-100">
-                            <tr><th class="px-8 py-4 text-left">内容需求方向 (冰谱内容)</th><th class="px-8 py-4 text-center">Euhomy</th><th class="px-8 py-4 text-center">其他</th></tr>
+                    <table class="w-full">
+                        <thead class="bg-gray-50 text-gray-400 text-[11px] uppercase border-b border-gray-100">
+                            <tr><th class="px-6 py-4 text-left">冰谱内容需求</th><th class="text-center w-32">Euhomy</th><th class="text-center w-32">Others</th></tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-50">
-                            <tr><td class="px-8 py-4 font-semibold text-slate-700">日常清爽快捷饮品</td><td class="text-center highlight-euhomy">55%</td><td class="text-center data-normal">49%</td></tr>
-                            <tr><td class="px-8 py-4 font-semibold text-slate-700">创意或趋势饮品点子</td><td class="text-center data-normal">55%</td><td class="text-center highlight-other-high">56%</td></tr>
-                            <tr><td class="px-8 py-4 font-semibold text-slate-700">季节或节日主题饮品</td><td class="text-center data-normal">45%</td><td class="text-center highlight-other-high">47%</td></tr>
-                            <tr><td class="px-8 py-4 font-semibold text-slate-700">使用简单/易找食材的配方</td><td class="text-center data-normal">45%</td><td class="text-center highlight-other-high">46%</td></tr>
-                            <tr><td class="px-8 py-4 font-semibold text-slate-700">适合聚会/招待客人的饮品</td><td class="text-center data-normal">36%</td><td class="text-center highlight-other-high">39%</td></tr>
-                            <tr><td class="px-8 py-4 font-semibold text-slate-700">简单的步骤说明</td><td class="text-center data-normal">36%</td><td class="text-center highlight-other-high">57%</td></tr>
-                            <tr><td class="px-8 py-4 font-semibold text-slate-700">推荐冰型或饮品搭配</td><td class="text-center data-normal">27%</td><td class="text-center highlight-other-high">41%</td></tr>
-                            <tr><td class="px-8 py-4 font-semibold text-slate-700">作为爱好学习制作</td><td class="text-center data-normal">18%</td><td class="text-center highlight-other-high">22%</td></tr>
-                            <tr><td class="px-8 py-4 font-semibold text-slate-700">高颜值/适合社交分享</td><td class="text-center data-normal">9%</td><td class="text-center highlight-other-high">21%</td></tr>
+                        <tbody class="divide-y divide-gray-50">
+                            <tr><td class="px-6 py-4 font-medium text-slate-700">日常清爽快捷饮品</td><td class="text-center val-euhomy">55%</td><td class="text-center val-normal">49%</td></tr>
+                            <tr><td class="px-6 py-4 font-medium text-slate-700">创意或趋势饮品点子</td><td class="text-center val-normal">55%</td><td class="text-center val-other">56%</td></tr>
+                            <tr><td class="px-6 py-4 font-medium text-slate-700">季节或节日主题饮品</td><td class="text-center val-normal">45%</td><td class="text-center val-other">47%</td></tr>
+                            <tr><td class="px-6 py-4 font-medium text-slate-700">使用简单/易找食材的配方</td><td class="text-center val-normal">45%</td><td class="text-center val-other">46%</td></tr>
+                            <tr><td class="px-6 py-4 font-medium text-slate-700">适合聚会/招待客人的饮品</td><td class="text-center val-normal">36%</td><td class="text-center val-other">39%</td></tr>
+                            <tr><td class="px-6 py-4 font-medium text-slate-700">简单的步骤说明</td><td class="text-center val-normal">36%</td><td class="text-center val-other">57%</td></tr>
+                            <tr><td class="px-6 py-4 font-medium text-slate-700">推荐冰型或饮品搭配</td><td class="text-center val-normal">27%</td><td class="text-center val-other">41%</td></tr>
+                            <tr><td class="px-6 py-4 font-medium text-slate-700">作为爱好学习制作</td><td class="text-center val-normal">18%</td><td class="text-center val-other">22%</td></tr>
+                            <tr><td class="px-6 py-4 font-medium text-slate-700">高颜值/适合社交分享</td><td class="text-center val-normal">9%</td><td class="text-center val-other">21%</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-
         </div>
 
-        <div class="mt-12 text-center text-[10px] text-slate-400 italic">
-            * 页面数据已校对原始表格。蓝色对应 Euhomy，琥珀色对应其他品牌。
-        </div>
+        <footer class="mt-10 text-center text-[10px] text-gray-400 uppercase tracking-widest italic">
+            * 蓝色加粗代表 Euhomy 表现占优的项目，琥珀色加粗代表竞品占优的项目。
+        </footer>
     </div>
 
     <script>
         function switchTab(type) {
-            // 更新按钮状态
-            document.querySelectorAll('.ice-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.ice-tab').forEach(btn => btn.classList.remove('active'));
             document.getElementById('tab-' + type).classList.add('active');
 
-            // 切换面板
-            document.querySelectorAll('.content-pane').forEach(pane => pane.classList.remove('active'));
+            document.querySelectorAll('.content-pane').forEach(panel => panel.classList.remove('active'));
             document.getElementById('content-' + type).classList.add('active');
         }
     </script>
