@@ -6,11 +6,10 @@
     <title>冰型使用原因多维度分析</title>
     <style>
         :root {
-            --primary: #2563eb;
-            --primary-light: #eff6ff;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
+            --primary: #1e40af; /* 深蓝色 */
+            --primary-light: #f0f4ff;
+            --accent: #b45309; /* 深橙/琥珀色 */
+            --accent-light: #fffbeb;
             --gray-100: #f1f5f9;
             --gray-200: #e2e8f0;
             --gray-700: #334155;
@@ -40,10 +39,9 @@
             color: var(--gray-800);
         }
 
-        /* 顶部卡片样式 */
         .card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
             margin-bottom: 2rem;
         }
@@ -52,15 +50,15 @@
             background: white;
             border: 2px solid transparent;
             border-radius: 12px;
-            padding: 1.25rem;
+            padding: 1rem;
             cursor: pointer;
             transition: all 0.2s ease;
-            position: relative;
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
             display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            min-height: 100px;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            min-height: 60px;
         }
 
         .ice-card:hover {
@@ -71,26 +69,22 @@
         .ice-card.active {
             border-color: var(--primary);
             background-color: white;
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
         }
 
         .card-title {
             font-weight: bold;
             font-size: 1.1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
 
         .badge {
             font-size: 0.7rem;
-            padding: 2px 6px;
-            border-radius: 4px;
+            padding: 2px 8px;
+            border-radius: 12px;
             font-weight: 600;
-            white-space: nowrap;
         }
 
         .badge-success { background: #dcfce7; color: #166534; }
@@ -98,13 +92,6 @@
         .badge-red { background: #fee2e2; color: #991b1b; }
         .badge-orange { background: #ffedd5; color: #9a3412; }
 
-        .card-desc {
-            font-size: 0.85rem;
-            color: #64748b;
-            line-height: 1.4;
-        }
-
-        /* 下方详情面板 */
         .detail-panel {
             background: white;
             border-radius: 16px;
@@ -119,51 +106,58 @@
         .detail-title {
             font-size: 1.25rem;
             font-weight: bold;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.8rem;
         }
 
         .detail-subtitle {
             font-size: 0.9rem;
-            color: #64748b;
+            color: var(--gray-700);
+            font-weight: 500;
+            background: var(--primary-light);
+            padding: 12px 16px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+            line-height: 1.5;
         }
 
-        /* 条形图样式 */
         .chart-row {
             margin-bottom: 1.5rem;
         }
 
         .row-label {
             font-size: 0.9rem;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.6rem;
             display: flex;
             justify-content: space-between;
+            align-items: center;
         }
 
-        .label-text { font-weight: 500; }
-        .label-values { font-size: 0.85rem; color: #475569; }
+        .label-text { font-weight: 600; color: var(--gray-800); }
+        .label-values { font-size: 0.85rem; color: #64748b; }
+        .highlight-value { font-weight: 900; color: #78350f; font-size: 0.95rem; } /* 加深加粗 */
 
         .bar-container {
-            height: 12px;
+            height: 14px;
             background: var(--gray-100);
-            border-radius: 6px;
+            border-radius: 7px;
             position: relative;
             overflow: hidden;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
         }
 
         .bar-euhomy {
             height: 100%;
-            background: linear-gradient(90deg, #3b82f6, #2563eb);
-            border-radius: 6px;
-            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(90deg, #2563eb, #1e40af);
+            border-radius: 7px;
+            transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .bar-others {
-            height: 6px;
-            background: #cbd5e1;
-            border-radius: 3px;
+            height: 100%;
+            background: linear-gradient(90deg, #d97706, #b45309);
+            border-radius: 7px;
+            transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
             margin-top: 4px;
-            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .legend {
@@ -175,13 +169,14 @@
             font-size: 0.85rem;
         }
 
-        .legend-item { display: flex; align-items: center; gap: 6px; }
-        .dot-euhomy { width: 10px; height: 10px; background: var(--primary); border-radius: 50%; }
-        .dot-others { width: 10px; height: 10px; background: #cbd5e1; border-radius: 50%; }
+        .legend-item { display: flex; align-items: center; gap: 8px; font-weight: 500; }
+        .dot-euhomy { width: 12px; height: 12px; background: var(--primary); border-radius: 3px; }
+        .dot-others { width: 12px; height: 12px; background: var(--accent); border-radius: 3px; }
 
         @media (max-width: 640px) {
             body { padding: 1rem; }
-            .card-grid { grid-template-columns: 1fr; }
+            .card-grid { grid-template-columns: repeat(2, 1fr); }
+            .row-label { flex-direction: column; align-items: flex-start; gap: 4px; }
         }
     </style>
 </head>
@@ -190,54 +185,46 @@
 <div class="container">
     <h1>冰型使用深度分析报告</h1>
 
-    <!-- 顶部导航卡片 -->
     <div class="card-grid">
         <div class="ice-card active" onclick="switchIce('bullet')">
-            <div class="card-header">
-                <span class="card-title">子弹冰</span>
-                <span class="badge badge-success">补水心智</span>
+            <div class="card-title">
+                <span>子弹冰</span>
+                <span class="badge badge-success">基础补水</span>
             </div>
-            <div class="card-desc">日常补水需求占比最高（78%），是用户的基础首选。</div>
         </div>
 
         <div class="ice-card" onclick="switchIce('square')">
-            <div class="card-header">
-                <span class="card-title">小方块</span>
-                <span class="badge badge-blue">社交利器</span>
+            <div class="card-title">
+                <span>小方块</span>
+                <span class="badge badge-blue">全能均衡</span>
             </div>
-            <div class="card-desc">在社交招待场景中表现亮眼（67%），具备极强的分享属性。</div>
         </div>
 
         <div class="ice-card" onclick="switchIce('crescent')">
-            <div class="card-header">
-                <span class="card-title">月牙冰</span>
-                <span class="badge badge-red">独处放松</span>
+            <div class="card-title">
+                <span>月牙冰</span>
+                <span class="badge badge-red">生活仪式</span>
             </div>
-            <div class="card-desc">以个人放松需求为主（67%），但生活仪式感认知尚待开发。</div>
         </div>
 
         <div class="ice-card" onclick="switchIce('nugget')">
-            <div class="card-header">
-                <span class="card-title">咀嚼冰</span>
-                <span class="badge badge-orange">极致解压</span>
+            <div class="card-title">
+                <span>咀嚼冰</span>
+                <span class="badge badge-orange">高效社交</span>
             </div>
-            <div class="card-desc">补水比例高达 82%，同时满足高频次、轻量化的放松需求。</div>
         </div>
     </div>
 
-    <!-- 详情面板 -->
     <div class="detail-panel">
         <div class="detail-header">
-            <div class="detail-title" id="display-title">子弹冰：使用原因深度对比</div>
-            <div class="detail-subtitle" id="display-subtitle">分析：Euhomy 在日常补水与社交分享上大幅领先其他品牌</div>
+            <div class="detail-title" id="display-title">子弹冰：动因深度分析</div>
+            <div class="detail-subtitle" id="display-subtitle"></div>
         </div>
 
-        <div id="chart-content">
-            <!-- 动态生成内容 -->
-        </div>
+        <div id="chart-content"></div>
 
         <div class="legend">
-            <div class="legend-item"><span class="dot-euhomy"></span> Euhomy</div>
+            <div class="legend-item"><span class="dot-euhomy"></span> Euhomy (本品牌)</div>
             <div class="legend-item"><span class="dot-others"></span> 其他品牌</div>
         </div>
     </div>
@@ -246,23 +233,23 @@
 <script>
     const data = {
         bullet: {
-            title: "子弹冰：多维度使用原因对比",
-            subtitle: "作为入门款冰型，Euhomy 用户在“日常补水”和“调饮兴趣”上表现出极强的粘性",
+            title: "子弹冰：行业使用动因对比",
+            subtitle: "市场洞察：行业数据反映子弹冰主要聚焦于生理性的“解渴补水”。用户行为极其务实，在情感体验和社交分享上的投入程度相对较低。",
             items: [
                 { label: "日常补水 (Refresh/Thirst)", euhomy: 78, others: 69 },
-                { label: "调饮兴趣提升 (Skill Improvement)", euhomy: 56, others: 37 },
                 { label: "生活仪式感 (Enjoyment/Ritual)", euhomy: 56, others: 41 },
+                { label: "调饮兴趣提升 (Skill Improvement)", euhomy: 56, others: 37 },
                 { label: "家庭/社交接待 (Hosting)", euhomy: 44, others: 38 },
                 { label: "个人放松时间 (Relax)", euhomy: 33, others: 46 },
                 { label: "社交媒体分享 (Social Media)", euhomy: 11, others: 12 }
             ]
         },
         square: {
-            title: "小方冰：多维度使用原因对比",
-            subtitle: "典型的社交型冰型，Euhomy 用户在招待场景的需求远超其他品牌",
+            title: "小方冰：行业使用动因对比",
+            subtitle: "市场洞察：小方冰在行业中表现出极佳的多功能性。在满足补水基础的同时，它在家庭社交和个人放松场景中也占据了重要地位。",
             items: [
-                { label: "个人放松时间 (Relax)", euhomy: 67, others: 45 },
                 { label: "家庭/社交接待 (Hosting)", euhomy: 67, others: 46 },
+                { label: "个人放松时间 (Relax)", euhomy: 67, others: 45 },
                 { label: "日常补水 (Refresh/Thirst)", euhomy: 60, others: 62 },
                 { label: "调饮兴趣提升 (Skill Improvement)", euhomy: 33, others: 40 },
                 { label: "生活仪式感 (Enjoyment/Ritual)", euhomy: 27, others: 44 },
@@ -270,8 +257,8 @@
             ]
         },
         crescent: {
-            title: "月牙冰：多维度使用原因对比",
-            subtitle: "用户画像高度集中在“自愈型放松”，但在仪式感营造上存在认知断层",
+            title: "月牙冰：行业使用动因对比",
+            subtitle: "市场洞察：月牙冰用户群体表现出明显的“品质生活”导向。行业基准显示该冰型在调饮美感和生活仪式感营造上具有极强的驱动力。",
             items: [
                 { label: "个人放松时间 (Relax)", euhomy: 67, others: 44 },
                 { label: "日常补水 (Refresh/Thirst)", euhomy: 67, others: 41 },
@@ -282,8 +269,8 @@
             ]
         },
         nugget: {
-            title: "咀嚼冰：多维度使用原因对比",
-            subtitle: "极致的补水效率工具，Euhomy 用户将其视为缓解口渴的首选方案",
+            title: "咀嚼冰：行业使用动因对比",
+            subtitle: "市场洞察：咀嚼冰在行业内被定义为“高效补水”与“高频交互”的载体。其独特的质地使其在社交接待和解压放松方面表现优异。",
             items: [
                 { label: "日常补水 (Refresh/Thirst)", euhomy: 82, others: 63 },
                 { label: "个人放松时间 (Relax)", euhomy: 64, others: 45 },
@@ -296,54 +283,67 @@
     };
 
     function switchIce(key) {
-        // 更新卡片状态
-        document.querySelectorAll('.ice-card').forEach(card => card.classList.remove('active'));
-        // 兼容事件调用
-        const currentCard = event ? event.currentTarget : document.querySelector('.ice-card');
-        if (currentCard) currentCard.classList.add('active');
+        document.querySelectorAll('.ice-card').forEach((card, index) => {
+            const keys = ['bullet', 'square', 'crescent', 'nugget'];
+            card.classList.toggle('active', keys[index] === key);
+        });
 
         const iceData = data[key];
         document.getElementById('display-title').innerText = iceData.title;
-        document.getElementById('display-subtitle').innerText = '分析：' + iceData.subtitle;
+        document.getElementById('display-subtitle').innerText = iceData.subtitle;
+
+        // 基础排序：按 Euhomy 数值从大到小排序
+        const sortedItems = [...iceData.items].sort((a, b) => b.euhomy - a.euhomy);
+
+        // 识别“其他品牌”中数值最高的两个索引（且该数值必须大于本品牌）
+        const itemsWithDiff = iceData.items.map((item, index) => ({
+            index,
+            others: item.others,
+            hasAdvantage: item.others > item.euhomy
+        }));
+        
+        // 找到others数值最高的前两名
+        const topTwoOthersIndexes = itemsWithDiff
+            .filter(d => d.hasAdvantage)
+            .sort((a, b) => b.others - a.others)
+            .slice(0, 2)
+            .map(d => d.index);
 
         const container = document.getElementById('chart-content');
         container.innerHTML = '';
 
-        iceData.items.forEach(item => {
+        sortedItems.forEach(item => {
             const row = document.createElement('div');
             row.className = 'chart-row';
             
-            // 咀嚼冰原图是小数，其他是百分数，这里统一转为显示字符串
-            const formatVal = (v) => v > 1 ? v + '%' : (v * 100).toFixed(0) + '%';
+            // 只有原索引在 topTwoOthersIndexes 中的项才加粗
+            const originalIndex = iceData.items.indexOf(item);
+            const othersClass = topTwoOthersIndexes.includes(originalIndex) ? 'highlight-value' : '';
             
-            const euhomyValStr = formatVal(item.euhomy);
-            const othersValStr = formatVal(item.others);
-            
-            // 计算宽度百分比
-            const euhomyWidth = item.euhomy > 1 ? item.euhomy : item.euhomy * 100;
-            const othersWidth = item.others > 1 ? item.others : item.others * 100;
-
             row.innerHTML = `
                 <div class="row-label">
                     <span class="label-text">${item.label}</span>
-                    <span class="label-values">Euhomy: ${euhomyValStr} / 其他品牌: ${othersValStr}</span>
+                    <span class="label-values">
+                        Euhomy: ${item.euhomy}% / 
+                        其他品牌: <span class="${othersClass}">${item.others}%</span>
+                    </span>
                 </div>
                 <div class="bar-container">
                     <div class="bar-euhomy" style="width: 0%"></div>
                 </div>
-                <div class="bar-others" style="width: 0%"></div>
+                <div class="bar-container">
+                    <div class="bar-others" style="width: 0%"></div>
+                </div>
             `;
             container.appendChild(row);
 
-            // 触发动画
             setTimeout(() => {
-                row.querySelector('.bar-euhomy').style.width = euhomyWidth + '%';
-                row.querySelector('.bar-others').style.width = othersWidth + '%';
+                row.querySelector('.bar-euhomy').style.width = item.euhomy + '%';
+                row.querySelector('.bar-others').style.width = item.others + '%';
             }, 50);
         });
     }
 
-    // 初始化显示子弹冰
     window.onload = () => switchIce('bullet');
 </script>
 
