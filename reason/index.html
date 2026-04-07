@@ -3,6 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>各冰型冰谱内容需求看板</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .ice-tab.active {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px -2px rgb(59 130 246 / 0.25);
+        }
+        .content-pane {
+            display: none;
+            animation: fadeIn 0.3s ease-out;
+        }
+        .content-pane.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Euhomy 颜色：蓝色 */
+        .highlight-euhomy { color: #2563eb; font-weight: 800; font-size: 1.05rem; }
+        /* 其他品牌 颜色：琥珀色 */
+        .highlight-other-high { color: #d97706; font-weight: 800; font-size: 1.05rem; }
+        .data-normal { color: #64748b; font-weight: 500; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen font-sans antialiased text-slate-900">
+    <div class="max-w-6xl mx-auto px-4 py-10">
+        <header class="mb-12 text-center">
+            <h1 class="text-3xl font-black text-slate-800 tracking-tight mb-3">各冰型冰谱内容需求深度分析</h1>
+            <p class="text-slate-500 max-w-2xl mx-auto text-sm">对比 Euhomy 与其他品牌用户在 9 个维度的内容偏好差异</p>
+        </header>
+
+        <!-- 顶部导航切换 -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <button onclick="switchTab('bullet')" id="tab-bullet" class="ice-tab active flex flex-col items-center p-6 bg-white border-2 border-transparent rounded-2xl transition-all duration-200 group">
+                <span class="text-4xl mb-2 group-hover:scale-110 transition-transform">⚪</span>
+                <span class="font-bold text-slate-700">子弹冰</span>
+                <span class="text-[10px] text-blue-500 font-bold uppercase tracking-widest mt-1">Bullet Ice</span>
+            </button>
+            <button onclick="switchTab('square')" id="tab-square" class="ice-tab flex flex-col items-center p-6 bg-white border-2 border-transparent rounded-2xl transition-all duration-200 group">
+                <span class="text-4xl mb-2 group-hover:scale-110 transition-transform">🧊</span>
+                <span class="font-bold text-slate-700">小方冰</span>
+                <span class="text-[10px] text-indigo-500 font-bold uppercase tracking-widest mt-1">Square Ice</span>
+            </button>
+            <button onclick="switchTab('crescent')" id="tab-crescent" class="ice-tab flex flex-col items-center p-6 bg-white border-2 border-transparent rounded-2xl transition-all duration-200 group">
+                <span class="text-4xl mb-2 group-hover:scale-110 transition-transform">🌙</span>
+                <span class="font-bold text-slate-700">月牙冰</span>
+                <span class="text-[10px] text-teal-500 font-bold uppercase tracking-widest mt-1">Crescent Ice</span>
+            </button>
+            <button onclick="switchTab('nugget')" id="tab-nugget" class="ice-tab flex flex-col items-center p-6 bg-white border-2 border-transparent rounded-2xl transition-all duration-200 group">
+                <span class="text-4xl mb-2 group-hover:scale-110 transition-transform">✨</span>
+                <span class="font-bold text-slate-700">咀嚼冰</span>
+                <span class="text-[10px] text-orange-500 font-bold uppercase tracking-widest mt-1">Nugget Ice</span>
+            </button>
+        </div>
+
+        <!-- 详情内容区 -->
+        <div id="content-container">
+
+            <!-- 子弹冰 -->
+            <div id="content-bullet" class="content-pane active">
+                <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="p-5 bg-blue-600 flex justify-between items-center text-white">
+                        <span class="font-bold tracking-wide uppercase text-sm">Bullet Ice Analysis Data</span>
+                        <div class="flex gap-6 text-xs font-bold">
+                            <div class="flex items-center"><div class="w-3 h-3 bg-blue-400 rounded-sm mr-2"></div>Euhomy</div>
+                            <div class="flex items-center"><div class="w-3 h-3 bg-amber-400 rounded-sm mr-2"></div>其他</div>
+                        </div>
+                    </div>
+                    <table class="w-full text-sm">
+                        <thead class="text-[11px] text-slate-400 uppercase bg-slate-50/50 border-b border-slate-100">
+                            <tr><th class="px-8 py-4 text-left">内容需求方向 (冰谱内容)</th><th class="px-8 py-4 text-center">Euhomy</th><th class="px-8 py-4 text-center">其他</th></tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-50">
+                            <tr><td class="px-8 py-4 font-semibold text-slate-700">使用简单/易找食材的配方</td><td class="text-center highlight-euhomy">67%</td><td class="text-center data-normal">48%</td></tr>
+                            <tr><td class="px-8 py-4 font-semibold text-slate-700">季节或节日主题饮品</td><td class="text-center highlight-euhomy">67%</td><td class="text-center data-normal">49%</td></tr>
+                            <tr><td class="px-8 py-4 font-semibold text-slate-700">简单的步骤说明</td><td class="text-center data-normal">56%</td><td class="text-center highlight-other-high">60%</td></tr>
+                            <tr><td class="px-8 py-4 font-semibold text-slate-700">推荐冰型或饮品搭配</td><td class="text-center highlight-euhomy">44%</td><td class="text-center data-normal">38%</td></tr>
+                            <tr><td class="px-8 py-4 font-semibold text-slate-700">适合聚会/招待客人的饮品</td><td class="text-center highlight-euhomy">44%</td><td class="text-center data-normal">36%</td></tr>
+                            <tr><td class="px-8 py-4 font-semibold text-slate-700">日常清爽快捷饮品</td><td class="text-center data-normal">44%</td><td class="text-center highlight-other-high">53%</td></tr>
+                            <tr><td class="px-8 py-4 font-semibold text-slate-700">高颜值/适合社交分享</td><td class="text-center highlight-euhomy">44%</td><td class="text-center data-normal">16%</td></tr>
+                            <tr><td class="px-8 py-4 font-semibold text-slate-700">创意或趋势饮品点子</td><td class="text-center data-normal">33%</td><td class="text-center highlight-other-high">46%</td></tr>
+                            <tr><td class="px-8 py-4 font-semibold text-slate-700">作为爱好学习制作</td><td class="text-center text-slate-300">11%</td><td class="text-center data-normal">17%</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 小方冰 -->
+            <div id="content-square" class="content-pane">
+                <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="p-5 bg-indigo-600 flex justify-between items-center text-white">
+                        <span class="font-bold tracking-wide uppercase text-sm">Square Ice Analysis Data</span>
+                        <div class="flex gap-6 text-xs font-bold">
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>冰型使用原因多维度分析</title>
     <style>
         :root {
@@ -224,7 +325,7 @@
         <div id="chart-content"></div>
 
         <div class="legend">
-            <div class="legend-item"><span class="dot-euhomy"></span> Euhomy</div>
+            <div class="legend-item"><span class="dot-euhomy"></span> Euhomy (本品牌)</div>
             <div class="legend-item"><span class="dot-others"></span> 其他品牌</div>
         </div>
     </div>
@@ -234,6 +335,7 @@
     const data = {
         bullet: {
             title: "子弹冰：行业使用动因对比",
+            subtitle: "市场洞察：行业数据反映子弹冰主要聚焦于生理性的“解渴补水”。用户行为极其务实，在情感体验和社交分享上的投入程度相对较低。",
             items: [
                 { label: "日常补水 (Refresh/Thirst)", euhomy: 78, others: 69 },
                 { label: "生活仪式感 (Enjoyment/Ritual)", euhomy: 56, others: 41 },
@@ -245,6 +347,7 @@
         },
         square: {
             title: "小方冰：行业使用动因对比",
+            subtitle: "市场洞察：小方冰在行业中表现出极佳的多功能性。在满足补水基础的同时，它在家庭社交和个人放松场景中也占据了重要地位。",
             items: [
                 { label: "家庭/社交接待 (Hosting)", euhomy: 67, others: 46 },
                 { label: "个人放松时间 (Relax)", euhomy: 67, others: 45 },
@@ -256,6 +359,7 @@
         },
         crescent: {
             title: "月牙冰：行业使用动因对比",
+            subtitle: "市场洞察：月牙冰用户群体表现出明显的“品质生活”导向。行业基准显示该冰型在调饮美感和生活仪式感营造上具有极强的驱动力。",
             items: [
                 { label: "个人放松时间 (Relax)", euhomy: 67, others: 44 },
                 { label: "日常补水 (Refresh/Thirst)", euhomy: 67, others: 41 },
@@ -267,6 +371,7 @@
         },
         nugget: {
             title: "咀嚼冰：行业使用动因对比",
+            subtitle: "市场洞察：咀嚼冰在行业内被定义为“高效补水”与“高频交互”的载体。其独特的质地使其在社交接待和解压放松方面表现优异。",
             items: [
                 { label: "日常补水 (Refresh/Thirst)", euhomy: 82, others: 63 },
                 { label: "个人放松时间 (Relax)", euhomy: 64, others: 45 },
@@ -297,7 +402,7 @@
             others: item.others,
             hasAdvantage: item.others > item.euhomy
         }));
-        
+
         // 找到others数值最高的前两名
         const topTwoOthersIndexes = itemsWithDiff
             .filter(d => d.hasAdvantage)
@@ -311,11 +416,11 @@
         sortedItems.forEach(item => {
             const row = document.createElement('div');
             row.className = 'chart-row';
-            
+
             // 只有原索引在 topTwoOthersIndexes 中的项才加粗
             const originalIndex = iceData.items.indexOf(item);
             const othersClass = topTwoOthersIndexes.includes(originalIndex) ? 'highlight-value' : '';
-            
+
             row.innerHTML = `
                 <div class="row-label">
                     <span class="label-text">${item.label}</span>
